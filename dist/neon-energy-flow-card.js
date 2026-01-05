@@ -13,8 +13,8 @@ connectedCallback() {
     ">
       <div style="
         position: relative;
-        width: 100%;
-        height: 1000px;   /* <-- TU JEST KLUCZ */
+        width: 100vw;
+        height: 1000vh;   /* <-- TU JEST KLUCZ */
         background: #0b1020;
       ">
         <img
