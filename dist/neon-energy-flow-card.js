@@ -15,7 +15,7 @@ connectedCallback() {
       overflow: hidden;
     ">
       <img
-        src="/hacsfiles/Neon-energy-flow-card/assets/Background.png"
+        src="/hacsfiles/Neon-energy-flow-card/assets/background.png"
         style="
           position: absolute;
           inset: 0;
