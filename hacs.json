@@ -1,6 +1,6 @@
 {
   "name": "Neon Energy Flow Card",
-  "content_in_root": true,
+  "content_in_root": false,
   "filename": "neon-energy-flow-card.js",
   "render_readme": true
 }
