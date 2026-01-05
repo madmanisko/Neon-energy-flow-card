@@ -7,26 +7,31 @@ class NeonEnergyFlowCard extends HTMLElement {
   }
 connectedCallback() {
   this.innerHTML = `
-    <div style="
-      position: relative;
-      width: 100%;
-      height: 500px;
-      background: #0b1020;
+    <ha-card style="
+      padding: 0;
       overflow: hidden;
     ">
-      <img
-        src="/hacsfiles/Neon-energy-flow-card/assets/background.png"
-        style="
-          position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        "
-      />
-    </div>
+      <div style="
+        position: relative;
+        width: 100%;
+        height: 600px;   /* <-- TU JEST KLUCZ */
+        background: #0b1020;
+      ">
+        <img
+          src="/hacsfiles/Neon-energy-flow-card/assets/background.png"
+          style="
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          "
+        />
+      </div>
+    </ha-card>
   `;
 }
+
 
 }
 customElements.define("neon-energy-flow-card", NeonEnergyFlowCard);
