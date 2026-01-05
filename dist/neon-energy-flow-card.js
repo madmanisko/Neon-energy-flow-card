@@ -14,7 +14,7 @@ connectedCallback() {
       <div style="
         position: relative;
         width: 100%;
-        height: 600px;   /* <-- TU JEST KLUCZ */
+        height: 800px;   /* <-- TU JEST KLUCZ */
         background: #0b1020;
       ">
         <img
