@@ -1,3 +1,35 @@
+// src/render/render-links.ts
+function renderLinksCanvas(scene, scale) {
+  const canvas = document.createElement("canvas");
+  const width = scene.meta.baseWidthPx * scale;
+  const height = scene.meta.baseHeightPx * scale;
+  canvas.width = Math.round(width);
+  canvas.height = Math.round(height);
+  canvas.style.width = `${width}px`;
+  canvas.style.height = `${height}px`;
+  canvas.style.position = "absolute";
+  canvas.style.left = "0";
+  canvas.style.top = "0";
+  canvas.style.pointerEvents = "none";
+  const ctx = canvas.getContext("2d");
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.lineWidth = 4 * scale;
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+  ctx.strokeStyle = "rgba(0, 255, 255, 0.35)";
+  scene.links.forEach((link) => {
+    const pts = link.path;
+    if (!pts || pts.length < 2) return;
+    ctx.beginPath();
+    ctx.moveTo(pts[0].x * scale, pts[0].y * scale);
+    for (let i5 = 1; i5 < pts.length; i5++) {
+      ctx.lineTo(pts[i5].x * scale, pts[i5].y * scale);
+    }
+    ctx.stroke();
+  });
+  return canvas;
+}
+
 // src/render/render-scene.ts
 function renderScene(scene, viewportW, viewportH) {
   const scale = Math.min(
@@ -7,49 +39,37 @@ function renderScene(scene, viewportW, viewportH) {
   const sceneW = scene.meta.baseWidthPx * scale;
   const sceneH = scene.meta.baseHeightPx * scale;
   const assetBase = `/hacsfiles/Neon-energy-flow-card/${scene.meta.assetRoot}`;
-  const backgroundHtml = scene.background.layers.map(
-    (layer) => `
-        <img
-          class="background-layer"
-          src="${assetBase}/${layer.asset}"
-          style="
-            width: ${sceneW}px;
-            height: ${sceneH}px;
-          "
-          draggable="false"
-        />
-      `
-  ).join("");
-  const nodesHtml = scene.nodes.map(
-    (n4) => `
-        <div
-          class="node"
-          style="
-            left: ${n4.xPx * scale}px;
-            top: ${n4.yPx * scale}px;
-            width: ${n4.widthPx * scale}px;
-          "
-        >
-          <img
-            src="${assetBase}/${n4.asset}"
-            style="width:100%;height:auto;"
-            draggable="false"
-          />
-        </div>
-      `
-  ).join("");
-  return `
-    <div
-      class="scene"
-      style="
-        width: ${sceneW}px;
-        height: ${sceneH}px;
-      "
-    >
-      ${backgroundHtml}
-      ${nodesHtml}
-    </div>
-  `;
+  const wrapper = document.createElement("div");
+  wrapper.className = "scene";
+  wrapper.style.width = `${sceneW}px`;
+  wrapper.style.height = `${sceneH}px`;
+  wrapper.style.position = "relative";
+  for (const layer of scene.background.layers) {
+    const img = document.createElement("img");
+    img.className = "background-layer";
+    img.src = `${assetBase}/${layer.asset}`;
+    img.style.width = `${sceneW}px`;
+    img.style.height = `${sceneH}px`;
+    img.draggable = false;
+    wrapper.appendChild(img);
+  }
+  const linksCanvas = renderLinksCanvas(scene, scale);
+  wrapper.appendChild(linksCanvas);
+  for (const n4 of scene.nodes) {
+    const node = document.createElement("div");
+    node.className = "node";
+    node.style.left = `${n4.xPx * scale}px`;
+    node.style.top = `${n4.yPx * scale}px`;
+    node.style.width = `${n4.widthPx * scale}px`;
+    const img = document.createElement("img");
+    img.src = `${assetBase}/${n4.asset}`;
+    img.style.width = "100%";
+    img.style.height = "auto";
+    img.draggable = false;
+    node.appendChild(img);
+    wrapper.appendChild(node);
+  }
+  return wrapper;
 }
 
 // src/scene/scene-v1.ts
@@ -883,7 +903,7 @@ var NeonEnergyFlowCard = class extends HTMLElement {
     const sceneId = this._config.scene ?? "wide_v1";
     const scene = SCENES[sceneId] ?? SCENES["wide_v1"];
     const container = this.querySelector(".scene-container");
-    container.innerHTML = renderScene(scene, vw, vh);
+    container.replaceChildren(renderScene(scene, vw, vh));
   }
 };
 customElements.define("neon-energy-flow-card", NeonEnergyFlowCard);

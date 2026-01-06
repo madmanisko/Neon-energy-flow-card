@@ -114,7 +114,7 @@ class NeonEnergyFlowCard extends HTMLElement {
     const scene = SCENES[sceneId] ?? SCENES["wide_v1"];
 
     const container = this.querySelector(".scene-container") as HTMLElement;
-    container.innerHTML = renderScene(scene, vw, vh);
+    container.replaceChildren(renderScene(scene, vw, vh));
   }
 }
 
