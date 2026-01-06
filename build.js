@@ -1,4 +1,7 @@
 import esbuild from "esbuild";
+import { rmSync, cpSync } from "fs";
+
+rmSync("dist", { recursive: true, force: true });
 
 esbuild.build({
   entryPoints: ["src/Neon-energy-flow-card.ts"],
@@ -9,3 +12,6 @@ esbuild.build({
     ".ts": "ts"
   }
 }).catch(() => process.exit(1));
+
+// kopiowanie assetów
+cpSync("assets", "dist/assets", { recursive: true });
