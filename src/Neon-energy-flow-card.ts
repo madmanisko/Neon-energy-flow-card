@@ -4,6 +4,7 @@ import { renderScene } from "./render/render-scene";
 class NeonEnergyFlowCard extends HTMLElement {
   private _resizeObserver?: ResizeObserver;
   private _root?: HTMLDivElement;
+  private _onWindowResize = () => this.render();
 
   set hass(hass: any) {}
 
@@ -16,14 +17,14 @@ class NeonEnergyFlowCard extends HTMLElement {
       <style>
         :host {
           display: block;
-          width: 100%;
-          height: 100%;
+          width: 100vw;
+          height: 100vh;
         }
 
         .card-root {
           position: relative;
           width: 100%;
-          height: 100vh;
+          height: 100%;
           overflow: hidden;
           background: #0b1020;
         }
@@ -33,6 +34,7 @@ class NeonEnergyFlowCard extends HTMLElement {
           left: 50%;
           top: 50%;
           transform: translate(-50%, -50%);
+          overflow: hidden;
           pointer-events: none;
         }
 
@@ -59,20 +61,24 @@ class NeonEnergyFlowCard extends HTMLElement {
     this._root = this.querySelector(".card-root")!;
     this.render();
 
+    // ⬇️ OBSERWUJ ROZMIAR KONTENERA
     this._resizeObserver = new ResizeObserver(() => this.render());
     this._resizeObserver.observe(this._root);
+
+    // ⬇️ OBSERWUJ ZMIANY OKNA (MENU / RESIZE / ZOOM)
+    window.addEventListener("resize", this._onWindowResize);
   }
 
   disconnectedCallback() {
     this._resizeObserver?.disconnect();
+    window.removeEventListener("resize", this._onWindowResize);
   }
 
   render() {
     if (!this._root) return;
 
-    const rect = this._root.getBoundingClientRect();
-    const vw = rect.width;
-    const vh = rect.height;
+    const vw = this._root.clientWidth;
+    const vh = window.innerHeight;
 
     const container = this.querySelector(".scene-container")!;
     container.innerHTML = renderScene(SCENE_V1, vw, vh);

@@ -115,6 +115,7 @@ function renderScene(scene, viewportW, viewportH) {
 var NeonEnergyFlowCard = class extends HTMLElement {
   _resizeObserver;
   _root;
+  _onWindowResize = () => this.render();
   set hass(hass) {
   }
   setConfig(config) {
@@ -125,14 +126,14 @@ var NeonEnergyFlowCard = class extends HTMLElement {
       <style>
         :host {
           display: block;
-          width: 100%;
-          height: 100%;
+          width: 100vw;
+          height: 100vh;
         }
 
         .card-root {
           position: relative;
           width: 100%;
-          height: 100vh;
+          height: 100%;
           overflow: hidden;
           background: #0b1020;
         }
@@ -142,6 +143,7 @@ var NeonEnergyFlowCard = class extends HTMLElement {
           left: 50%;
           top: 50%;
           transform: translate(-50%, -50%);
+          overflow: hidden;
           pointer-events: none;
         }
 
@@ -168,15 +170,16 @@ var NeonEnergyFlowCard = class extends HTMLElement {
     this.render();
     this._resizeObserver = new ResizeObserver(() => this.render());
     this._resizeObserver.observe(this._root);
+    window.addEventListener("resize", this._onWindowResize);
   }
   disconnectedCallback() {
     this._resizeObserver?.disconnect();
+    window.removeEventListener("resize", this._onWindowResize);
   }
   render() {
     if (!this._root) return;
-    const rect = this._root.getBoundingClientRect();
-    const vw = rect.width;
-    const vh = rect.height;
+    const vw = this._root.clientWidth;
+    const vh = window.innerHeight;
     const container = this.querySelector(".scene-container");
     container.innerHTML = renderScene(SCENE_V1, vw, vh);
   }
