@@ -40,8 +40,11 @@ class NeonEnergyFlowCardEditor extends LitElement {
 
     this._config = { ...this._config, scene };
     this._emitConfigChanged();
-}
+  }
 
+  private _stopClose(ev: Event) {
+    ev.stopPropagation();
+  }
 
   render() {
     const current = this._config.scene ?? "wide_v1";
@@ -54,6 +57,7 @@ class NeonEnergyFlowCardEditor extends LitElement {
           label="Style card"
           .value=${current}
           @value-changed=${this._onSceneChanged}
+          @closed=${this._stopClose}
         >
           ${SCENE_OPTIONS.map(
             (opt) => html`<mwc-list-item .value=${opt.value}>${opt.label}</mwc-list-item>`

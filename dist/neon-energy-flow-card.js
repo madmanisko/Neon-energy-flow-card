@@ -114,10 +114,11 @@ var SCENE_V1 = {
 // src/scene/scene-registry.ts
 var SCENE_OPTIONS = [
   { value: "wide_v1", label: "Wide 16:9 ver V1" },
-  { value: "wide_v1", label: "Wide 16:9 ver V1test" }
+  { value: "wide_v1_test", label: "Wide 16:9 ver V1test" }
 ];
 var SCENES = {
-  wide_v1: SCENE_V1
+  wide_v1: SCENE_V1,
+  wide_v1_test: SCENE_V1
 };
 
 // node_modules/@lit/reactive-element/css-tag.js
@@ -701,6 +702,9 @@ var NeonEnergyFlowCardEditor = class extends i4 {
     this._config = { ...this._config, scene };
     this._emitConfigChanged();
   }
+  _stopClose(ev) {
+    ev.stopPropagation();
+  }
   render() {
     const current = this._config.scene ?? "wide_v1";
     return b2`
@@ -711,6 +715,7 @@ var NeonEnergyFlowCardEditor = class extends i4 {
           label="Style card"
           .value=${current}
           @value-changed=${this._onSceneChanged}
+          @closed=${this._stopClose}
         >
           ${SCENE_OPTIONS.map(
       (opt) => b2`<mwc-list-item .value=${opt.value}>${opt.label}</mwc-list-item>`
