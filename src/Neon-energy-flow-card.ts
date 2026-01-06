@@ -3,6 +3,7 @@ import { renderScene } from "./render/render-scene";
 
 class NeonEnergyFlowCard extends HTMLElement {
   private _resizeObserver?: ResizeObserver;
+  private _root?: HTMLDivElement;
 
   set hass(hass: any) {}
 
@@ -11,38 +12,20 @@ class NeonEnergyFlowCard extends HTMLElement {
   }
 
   connectedCallback() {
-    // pierwszy render
-    this.render();
-
-    // reagowanie na zmianę rozmiaru hosta (np. wysuwanie belki HA)
-    this._resizeObserver = new ResizeObserver(() => {
-      this.render();
-    });
-    this._resizeObserver.observe(this);
-  }
-
-  disconnectedCallback() {
-    // sprzątanie
-    this._resizeObserver?.disconnect();
-  }
-
-  render() {
-    const rect = this.getBoundingClientRect();
-    const vw = rect.width;
-    const vh = rect.height;
-
     this.innerHTML = `
       <style>
         :host {
           display: block;
-          width: 100%;
-          height: 100%;
+        }
+
+        .card-root {
           position: relative;
+          width: 100%;
+          height: 100vh; /* KLUCZOWE */
           overflow: hidden;
           background: #0b1020;
         }
 
-        /* tło */
         .background {
           position: absolute;
           inset: 0;
@@ -51,10 +34,8 @@ class NeonEnergyFlowCard extends HTMLElement {
           object-fit: cover;
           z-index: 0;
           pointer-events: none;
-          user-select: none;
         }
 
-        /* scena (kontener na node'y i kable) */
         .scene {
           position: absolute;
           inset: 0;
@@ -62,7 +43,6 @@ class NeonEnergyFlowCard extends HTMLElement {
           pointer-events: none;
         }
 
-        /* pojedynczy komponent (PV, Inverter, Battery itd.) */
         .node {
           position: absolute;
           transform: translate(-50%, -50%);
@@ -71,14 +51,36 @@ class NeonEnergyFlowCard extends HTMLElement {
         }
       </style>
 
-      <img
-        class="background"
-        src="/hacsfiles/Neon-energy-flow-card/assets/background.png"
-      />
-
-      ${renderScene(SCENE_V1, vw, vh)}
+      <div class="card-root">
+        <img
+          class="background"
+          src="/hacsfiles/Neon-energy-flow-card/assets/background.png"
+        />
+        <div class="scene"></div>
+      </div>
     `;
+
+    this._root = this.querySelector(".card-root")!;
+    this.render();
+
+    this._resizeObserver = new ResizeObserver(() => this.render());
+    this._resizeObserver.observe(this._root);
+  }
+
+  disconnectedCallback() {
+    this._resizeObserver?.disconnect();
+  }
+
+  render() {
+    if (!this._root) return;
+
+    const rect = this._root.getBoundingClientRect();
+    const vw = rect.width;
+    const vh = rect.height;
+
+    const sceneEl = this.querySelector(".scene")!;
+    sceneEl.innerHTML = renderScene(SCENE_V1, vw, vh);
   }
 }
 
-customElements.define("Neon-energy-flow-card", NeonEnergyFlowCard);
+customElements.define("neon-energy-flow-card", NeonEnergyFlowCard);
