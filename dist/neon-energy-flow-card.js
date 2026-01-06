@@ -267,3 +267,9 @@ var NeonEnergyFlowCard = class extends HTMLElement {
   }
 };
 customElements.define("neon-energy-flow-card", NeonEnergyFlowCard);
+window.customCards = window.customCards || [];
+window.customCards.push({
+  type: "neon-energy-flow-card",
+  name: "Neon Energy Flow Card",
+  description: "Cinematic neon energy flow visualization"
+});

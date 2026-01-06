@@ -119,3 +119,10 @@ class NeonEnergyFlowCard extends HTMLElement {
 }
 
 customElements.define("neon-energy-flow-card", NeonEnergyFlowCard);
+
+(window as any).customCards = (window as any).customCards || [];
+(window as any).customCards.push({
+  type: "neon-energy-flow-card",
+  name: "Neon Energy Flow Card",
+  description: "Cinematic neon energy flow visualization"
+});
