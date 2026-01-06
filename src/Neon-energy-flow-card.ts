@@ -1,14 +1,26 @@
-import { SCENE_V1 } from "./scene/scene-v1";
 import { renderScene } from "./render/render-scene";
+import { SCENES, type SceneId } from "./scene/scene-registry";
+import "./editor/neon-energy-flow-card-editor";
+
+type NeonEnergyFlowCardConfig = {
+  scene?: SceneId;
+};
 
 class NeonEnergyFlowCard extends HTMLElement {
   private _resizeObserver?: ResizeObserver;
   private _root?: HTMLDivElement;
+  private _config: NeonEnergyFlowCardConfig = {};
 
   set hass(hass: any) {}
 
-  setConfig(config: any) {
+  setConfig(config: NeonEnergyFlowCardConfig) {
     if (!config) throw new Error("Config required");
+    this._config = { ...(config ?? {}) };
+    this.render();
+  }
+
+  static getConfigElement() {
+    return document.createElement("neon-energy-flow-card-editor");
   }
 
   connectedCallback() {
@@ -60,7 +72,7 @@ class NeonEnergyFlowCard extends HTMLElement {
     this._root = this.querySelector(".card-root")!;
     this.render();
 
-    // Obserwujemy realny kontener HA (panel view / layout changes)
+    // Observe HA viewport (panel view)
     const haViewport =
       (this.closest("hui-panel-view") as HTMLElement | null) ||
       (this.closest("hui-root") as HTMLElement | null) ||
@@ -74,10 +86,6 @@ class NeonEnergyFlowCard extends HTMLElement {
     this._resizeObserver?.disconnect();
   }
 
-  /**
-   * Zwraca rzeczywisty obszar, w którym HA wyświetla panel.
-   * W panel: true HA często NIE wywołuje window.resize, więc nie opieramy się na window.innerHeight.
-   */
   private _getViewportSize() {
     const panel = this.closest("hui-panel-view") as HTMLElement | null;
     if (panel) {
@@ -91,22 +99,22 @@ class NeonEnergyFlowCard extends HTMLElement {
       return { vw: r.width, vh: r.height };
     }
 
-    // Fallback
     const r = this._root?.getBoundingClientRect();
     return {
       vw: r?.width ?? window.innerWidth,
-      vh: r?.height ?? window.innerHeight
+      vh: r?.height ?? window.innerHeight,
     };
   }
 
   render() {
     if (!this._root) return;
 
-    // TU JEST KLUCZ: bierzemy rozmiar z realnego widoku HA, a nie z window
     const { vw, vh } = this._getViewportSize();
+    const sceneId: SceneId = this._config.scene ?? "wide_v1";
+    const scene = SCENES[sceneId] ?? SCENES["wide_v1"];
 
-    const container = this.querySelector(".scene-container")!;
-    container.innerHTML = renderScene(SCENE_V1, vw, vh);
+    const container = this.querySelector(".scene-container") as HTMLElement;
+    container.innerHTML = renderScene(scene, vw, vh);
   }
 }
 
