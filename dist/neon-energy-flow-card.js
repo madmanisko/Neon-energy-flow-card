@@ -87,16 +87,27 @@ var NeonEnergyFlowCard = class extends HTMLElement {
           background: #0b1020;
         }
 
+        /* t\u0142o */
         .background {
           position: absolute;
           inset: 0;
           width: 100%;
           height: 100%;
           object-fit: cover;
+          z-index: 0;
           pointer-events: none;
           user-select: none;
         }
 
+        /* scena (kontener na node'y i kable) */
+        .scene {
+          position: absolute;
+          inset: 0;
+          z-index: 1;
+          pointer-events: none;
+        }
+
+        /* pojedynczy komponent (PV, Inverter, Battery itd.) */
         .node {
           position: absolute;
           transform: translate(-50%, -50%);
