@@ -113,7 +113,8 @@ var SCENE_V1 = {
 
 // src/scene/scene-registry.ts
 var SCENE_OPTIONS = [
-  { value: "wide_v1", label: "Wide 16:9 ver V1" }
+  { value: "wide_v1", label: "Wide 16:9 ver V1" },
+  { value: "wide_v1", label: "Wide 16:9 ver V1test" }
 ];
 var SCENES = {
   wide_v1: SCENE_V1
