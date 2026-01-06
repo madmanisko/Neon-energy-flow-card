@@ -10,7 +10,8 @@ esbuild.build({
   outfile: "dist/neon-energy-flow-card.js",
   loader: {
     ".ts": "ts"
-  }
+  },
+  external: ["lit"]
 }).catch(() => process.exit(1));
 
 // kopiowanie assetów
