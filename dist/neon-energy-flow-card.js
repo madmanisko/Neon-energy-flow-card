@@ -7,18 +7,29 @@ var NeonEnergyFlowCard = class extends HTMLElement {
   }
   connectedCallback() {
     this.innerHTML = `
-      <div style="
-        width:100%;
-        height:300px;
-        background:#0b1020;
-        color:#00ffff;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        font-family:monospace;
-      ">
-        Energy Flow Card \u2013 DEV
-      </div>
+      <style>
+        :host {
+          position: fixed;
+          inset: 0;
+          width: 100vw;
+          height: 100svh;
+          overflow: hidden;
+          background: #0b1020;
+        }
+
+        .background {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      </style>
+
+      <img
+        class="background"
+        src="/hacsfiles/Neon-energy-flow-card/assets/background.png"
+      />
     `;
   }
 };
