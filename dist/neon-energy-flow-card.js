@@ -693,9 +693,10 @@ var NeonEnergyFlowCardEditor = class extends i4 {
       })
     );
   }
-  _onSceneSelected(ev) {
-    const select = ev.currentTarget;
-    const scene = select?.value;
+  _onSceneChanged(ev) {
+    ev.stopPropagation();
+    const scene = ev.detail.value;
+    if (!scene) return;
     this._config = { ...this._config, scene };
     this._emitConfigChanged();
   }
@@ -708,7 +709,7 @@ var NeonEnergyFlowCardEditor = class extends i4 {
         <ha-select
           label="Style card"
           .value=${current}
-          @selected=${this._onSceneSelected}
+          @value-changed=${this._onSceneChanged}
         >
           ${SCENE_OPTIONS.map(
       (opt) => b2`<mwc-list-item .value=${opt.value}>${opt.label}</mwc-list-item>`

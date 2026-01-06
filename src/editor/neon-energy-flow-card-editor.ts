@@ -32,14 +32,16 @@ class NeonEnergyFlowCardEditor extends LitElement {
     );
   }
 
-  private _onSceneSelected(ev: Event) {
-    // ha-select fires `selected` event; value is stored on the element
-    const select = ev.currentTarget as any;
-    const scene = select?.value as SceneId;
+  private _onSceneChanged(ev: CustomEvent) {
+    ev.stopPropagation();
+
+    const scene = ev.detail.value as SceneId;
+    if (!scene) return;
 
     this._config = { ...this._config, scene };
     this._emitConfigChanged();
-  }
+}
+
 
   render() {
     const current = this._config.scene ?? "wide_v1";
@@ -51,7 +53,7 @@ class NeonEnergyFlowCardEditor extends LitElement {
         <ha-select
           label="Style card"
           .value=${current}
-          @selected=${this._onSceneSelected}
+          @value-changed=${this._onSceneChanged}
         >
           ${SCENE_OPTIONS.map(
             (opt) => html`<mwc-list-item .value=${opt.value}>${opt.label}</mwc-list-item>`
