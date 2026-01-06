@@ -5,7 +5,8 @@ import { SCENE_V1 } from "./scene-v1";
  * Labels are only for the UI editor.
  */
 export const SCENE_OPTIONS = [
-  { value: "wide_v1", label: "Wide 16:9 ver V1" }
+  { value: "wide_v1", label: "Wide 16:9 ver V1" },
+  { value: "wide_v1", label: "Wide 16:9 ver V1test" }
 ] as const;
 
 export type SceneId = (typeof SCENE_OPTIONS)[number]["value"];
