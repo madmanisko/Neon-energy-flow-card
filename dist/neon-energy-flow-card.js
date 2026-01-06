@@ -844,10 +844,8 @@ var NeonEnergyFlowCard = class extends HTMLElement {
         }
 
         .scene {
-          position: absolute;
-          left: 50%;
-          top: 50%;
-          transform: translate(-50%, -50%);
+          position: relative;
+          margin: auto;
           overflow: hidden;
           pointer-events: none;
         }
