@@ -115,7 +115,6 @@ function renderScene(scene, viewportW, viewportH) {
 var NeonEnergyFlowCard = class extends HTMLElement {
   _resizeObserver;
   _root;
-  _onWindowResize = () => this.render();
   set hass(hass) {
   }
   setConfig(config) {
@@ -126,8 +125,8 @@ var NeonEnergyFlowCard = class extends HTMLElement {
       <style>
         :host {
           display: block;
-          width: 100vw;
-          height: 100vh;
+          width: 100%;
+          height: 100%;
         }
 
         .card-root {
@@ -168,18 +167,37 @@ var NeonEnergyFlowCard = class extends HTMLElement {
     `;
     this._root = this.querySelector(".card-root");
     this.render();
+    const haViewport = this.closest("hui-panel-view") || this.closest("hui-root") || this._root;
     this._resizeObserver = new ResizeObserver(() => this.render());
-    this._resizeObserver.observe(this._root);
-    window.addEventListener("resize", this._onWindowResize);
+    this._resizeObserver.observe(haViewport);
   }
   disconnectedCallback() {
     this._resizeObserver?.disconnect();
-    window.removeEventListener("resize", this._onWindowResize);
+  }
+  /**
+   * Zwraca rzeczywisty obszar, w którym HA wyświetla panel.
+   * W panel: true HA często NIE wywołuje window.resize, więc nie opieramy się na window.innerHeight.
+   */
+  _getViewportSize() {
+    const panel = this.closest("hui-panel-view");
+    if (panel) {
+      const r2 = panel.getBoundingClientRect();
+      return { vw: r2.width, vh: r2.height };
+    }
+    const root = this.closest("hui-root");
+    if (root) {
+      const r2 = root.getBoundingClientRect();
+      return { vw: r2.width, vh: r2.height };
+    }
+    const r = this._root?.getBoundingClientRect();
+    return {
+      vw: r?.width ?? window.innerWidth,
+      vh: r?.height ?? window.innerHeight
+    };
   }
   render() {
     if (!this._root) return;
-    const vw = this._root.clientWidth;
-    const vh = window.innerHeight;
+    const { vw, vh } = this._getViewportSize();
     const container = this.querySelector(".scene-container");
     container.innerHTML = renderScene(SCENE_V1, vw, vh);
   }

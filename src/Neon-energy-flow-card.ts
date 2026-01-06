@@ -4,7 +4,6 @@ import { renderScene } from "./render/render-scene";
 class NeonEnergyFlowCard extends HTMLElement {
   private _resizeObserver?: ResizeObserver;
   private _root?: HTMLDivElement;
-  private _onWindowResize = () => this.render();
 
   set hass(hass: any) {}
 
@@ -17,8 +16,8 @@ class NeonEnergyFlowCard extends HTMLElement {
       <style>
         :host {
           display: block;
-          width: 100vw;
-          height: 100vh;
+          width: 100%;
+          height: 100%;
         }
 
         .card-root {
@@ -61,24 +60,50 @@ class NeonEnergyFlowCard extends HTMLElement {
     this._root = this.querySelector(".card-root")!;
     this.render();
 
-    // ⬇️ OBSERWUJ ROZMIAR KONTENERA
-    this._resizeObserver = new ResizeObserver(() => this.render());
-    this._resizeObserver.observe(this._root);
+    // Obserwujemy realny kontener HA (panel view / layout changes)
+    const haViewport =
+      (this.closest("hui-panel-view") as HTMLElement | null) ||
+      (this.closest("hui-root") as HTMLElement | null) ||
+      this._root;
 
-    // ⬇️ OBSERWUJ ZMIANY OKNA (MENU / RESIZE / ZOOM)
-    window.addEventListener("resize", this._onWindowResize);
+    this._resizeObserver = new ResizeObserver(() => this.render());
+    this._resizeObserver.observe(haViewport);
   }
 
   disconnectedCallback() {
     this._resizeObserver?.disconnect();
-    window.removeEventListener("resize", this._onWindowResize);
+  }
+
+  /**
+   * Zwraca rzeczywisty obszar, w którym HA wyświetla panel.
+   * W panel: true HA często NIE wywołuje window.resize, więc nie opieramy się na window.innerHeight.
+   */
+  private _getViewportSize() {
+    const panel = this.closest("hui-panel-view") as HTMLElement | null;
+    if (panel) {
+      const r = panel.getBoundingClientRect();
+      return { vw: r.width, vh: r.height };
+    }
+
+    const root = this.closest("hui-root") as HTMLElement | null;
+    if (root) {
+      const r = root.getBoundingClientRect();
+      return { vw: r.width, vh: r.height };
+    }
+
+    // Fallback
+    const r = this._root?.getBoundingClientRect();
+    return {
+      vw: r?.width ?? window.innerWidth,
+      vh: r?.height ?? window.innerHeight
+    };
   }
 
   render() {
     if (!this._root) return;
 
-    const vw = this._root.clientWidth;
-    const vh = window.innerHeight;
+    // TU JEST KLUCZ: bierzemy rozmiar z realnego widoku HA, a nie z window
+    const { vw, vh } = this._getViewportSize();
 
     const container = this.querySelector(".scene-container")!;
     container.innerHTML = renderScene(SCENE_V1, vw, vh);
