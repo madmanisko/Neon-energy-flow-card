@@ -56,43 +56,62 @@ function renderScene(scene, viewportW, viewportH) {
 
 // src/Neon-energy-flow-card.ts
 var NeonEnergyFlowCard = class extends HTMLElement {
+  _resizeObserver;
   set hass(hass) {
   }
   setConfig(config) {
     if (!config) throw new Error("Config required");
   }
   connectedCallback() {
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
+    this.render();
+    this._resizeObserver = new ResizeObserver(() => {
+      this.render();
+    });
+    this._resizeObserver.observe(this);
+  }
+  disconnectedCallback() {
+    this._resizeObserver?.disconnect();
+  }
+  render() {
+    const rect = this.getBoundingClientRect();
+    const vw = rect.width;
+    const vh = rect.height;
     this.innerHTML = `
-    <style>
-      :host {
-        position: fixed;
-        inset: 0;
-        background: #0b1020;
-        overflow: hidden;
-      }
-      .background {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-      .node {
-        position: absolute;
-        transform: translate(-50%, -50%);
-        pointer-events: none;
-      }
-    </style>
+      <style>
+        :host {
+          display: block;
+          width: 100%;
+          height: 100%;
+          position: relative;
+          overflow: hidden;
+          background: #0b1020;
+        }
 
-    <img
-      class="background"
-      src="/hacsfiles/Neon-energy-flow-card/assets/background.png"
-    />
+        .background {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          pointer-events: none;
+          user-select: none;
+        }
 
-    ${renderScene(SCENE_V1, vw, vh)}
-  `;
+        .node {
+          position: absolute;
+          transform: translate(-50%, -50%);
+          pointer-events: none;
+          user-select: none;
+        }
+      </style>
+
+      <img
+        class="background"
+        src="/hacsfiles/Neon-energy-flow-card/assets/background.png"
+      />
+
+      ${renderScene(SCENE_V1, vw, vh)}
+    `;
   }
 };
 customElements.define("Neon-energy-flow-card", NeonEnergyFlowCard);
