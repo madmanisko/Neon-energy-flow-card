@@ -1,39 +1,79 @@
-type NodeDef = {
+type BackgroundLayer = {
+  id: string;
+  asset: string;
+};
+
+type SceneMeta = {
+  baseWidthPx: number;
+  baseHeightPx: number;
+  assetRoot: string;
+};
+
+type SceneNode = {
   id: string;
   asset: string;
   xPx: number;
   yPx: number;
-  iconWidthPx: number;
+  widthPx: number;
+};
+
+type Scene = {
+  meta: SceneMeta;
+  background: {
+    layers: BackgroundLayer[];
+  };
+  nodes: SceneNode[];
 };
 
 export function renderScene(
-  scene: { baseWidthPx: number; baseHeightPx: number; nodes: NodeDef[] },
+  scene: Scene,
   viewportW: number,
   viewportH: number
 ) {
   const scale = Math.min(
-    viewportW / scene.baseWidthPx,
-    viewportH / scene.baseHeightPx
+    viewportW / scene.meta.baseWidthPx,
+    viewportH / scene.meta.baseHeightPx
   );
+
+  const sceneW = scene.meta.baseWidthPx * scale;
+  const sceneH = scene.meta.baseHeightPx * scale;
+
+  const assetBase = `/hacsfiles/Neon-energy-flow-card/${scene.meta.assetRoot}`;
+
+  const backgroundHtml = scene.background.layers
+    .map(
+      (layer) => `
+        <img
+          class="background-layer"
+          src="${assetBase}/${layer.asset}"
+          style="
+            width: ${sceneW}px;
+            height: ${sceneH}px;
+          "
+          draggable="false"
+        />
+      `
+    )
+    .join("");
 
   const nodesHtml = scene.nodes
     .map(
       (n) => `
-      <div
-        class="node"
-        style="
-          left:${n.xPx * scale}px;
-          top:${n.yPx * scale}px;
-          width:${n.iconWidthPx * scale}px;
-        "
-      >
-        <img
-          src="/hacsfiles/Neon-energy-flow-card/assets/${n.asset}"
-          style="width:100%;height:auto;"
-          draggable="false"
-        />
-      </div>
-    `
+        <div
+          class="node"
+          style="
+            left: ${n.xPx * scale}px;
+            top: ${n.yPx * scale}px;
+            width: ${n.widthPx * scale}px;
+          "
+        >
+          <img
+            src="${assetBase}/${n.asset}"
+            style="width:100%;height:auto;"
+            draggable="false"
+          />
+        </div>
+      `
     )
     .join("");
 
@@ -41,14 +81,11 @@ export function renderScene(
     <div
       class="scene"
       style="
-        width:${scene.baseWidthPx * scale}px;
-        height:${scene.baseHeightPx * scale}px;
-        position:absolute;
-        left:50%;
-        top:50%;
-        transform:translate(-50%,-50%);
+        width: ${sceneW}px;
+        height: ${sceneH}px;
       "
     >
+      ${backgroundHtml}
       ${nodesHtml}
     </div>
   `;

@@ -16,31 +16,31 @@ class NeonEnergyFlowCard extends HTMLElement {
       <style>
         :host {
           display: block;
+          width: 100%;
+          height: 100%;
         }
 
         .card-root {
           position: relative;
           width: 100%;
-          height: 100vh; /* KLUCZOWE */
+          height: 100vh;
           overflow: hidden;
           background: #0b1020;
         }
 
-        .background {
+        .scene {
           position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          z-index: 0;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
           pointer-events: none;
         }
 
-        .scene {
+        .background-layer {
           position: absolute;
           inset: 0;
-          z-index: 1;
           pointer-events: none;
+          user-select: none;
         }
 
         .node {
@@ -52,11 +52,7 @@ class NeonEnergyFlowCard extends HTMLElement {
       </style>
 
       <div class="card-root">
-        <img
-          class="background"
-          src="/hacsfiles/Neon-energy-flow-card/assets/background.png"
-        />
-        <div class="scene"></div>
+        <div class="scene-container"></div>
       </div>
     `;
 
@@ -78,8 +74,8 @@ class NeonEnergyFlowCard extends HTMLElement {
     const vw = rect.width;
     const vh = rect.height;
 
-    const sceneEl = this.querySelector(".scene")!;
-    sceneEl.innerHTML = renderScene(SCENE_V1, vw, vh);
+    const container = this.querySelector(".scene-container")!;
+    container.innerHTML = renderScene(SCENE_V1, vw, vh);
   }
 }
 
