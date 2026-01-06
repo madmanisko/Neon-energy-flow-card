@@ -61,5 +61,70 @@ export const SCENE_V1 = {
     }
   ],
 
-  links: []
+  links: [
+  {
+    id: "pv1_to_inverter",
+    from: "pv1",
+    to: "inverter",
+    flowType: "pv",
+    path: [
+      { x: 840, y: 260 },
+      { x: 840, y: 430 }
+    ]
+  },
+  {
+    id: "pv2_to_inverter",
+    from: "pv2",
+    to: "inverter",
+    flowType: "pv",
+    path: [
+      { x: 1040, y: 260 },
+      { x: 900, y: 430 }
+    ]
+  },
+  {
+    id: "battery1_to_inverter",
+    from: "battery1",
+    to: "inverter",
+    flowType: "battery",
+    path: [
+      { x: 520, y: 720 },
+      { x: 700, y: 720 },
+      { x: 700, y: 580 }
+    ]
+  },
+  {
+    id: "battery2_to_inverter",
+    from: "battery2",
+    to: "inverter",
+    flowType: "battery",
+    path: [
+      { x: 300, y: 720 },
+      { x: 600, y: 720 },
+      { x: 600, y: 580 }
+    ]
+  },
+  {
+    id: "grid_to_inverter",
+    from: "grid",
+    to: "inverter",
+    flowType: "grid",
+    path: [
+      { x: 1200, y: 720 },
+      { x: 980, y: 720 },
+      { x: 980, y: 580 }
+    ]
+  },
+  {
+    id: "inverter_to_home",
+    from: "inverter",
+    to: "home",
+    flowType: "home",
+    path: [
+      { x: 840, y: 600 },
+      { x: 840, y: 880 }
+    ]
+  }
+]
+
 };
