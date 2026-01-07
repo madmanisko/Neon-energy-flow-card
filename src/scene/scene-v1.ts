@@ -57,7 +57,7 @@ export const SCENE_V1 = {
       asset: "nodes/home.png",
       xPx: 840,
       yPx: 910,
-      widthPx: 287
+      widthPx: 600
     }
   ],
 
