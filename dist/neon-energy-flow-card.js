@@ -99,9 +99,8 @@ var SCENE_V1 = {
       //840,
       yPx: 294,
       //170,
-      widthPx: 477,
+      widthPx: 477
       //573
-      flipY: true
     },
     {
       id: "inverter",
@@ -150,8 +149,9 @@ var SCENE_V1 = {
       to: "inverter",
       flowType: "pv",
       path: [
-        { x: 840, y: 260 },
-        { x: 840, y: 430 }
+        { x: 421, y: 341 },
+        { x: 421, y: 540 },
+        { x: 760, y: 540 }
       ]
     },
     {
@@ -170,9 +170,9 @@ var SCENE_V1 = {
       to: "inverter",
       flowType: "battery",
       path: [
-        { x: 520, y: 720 },
-        { x: 700, y: 720 },
-        { x: 700, y: 580 }
+        { x: 465, y: 785 },
+        { x: 815, y: 785 },
+        { x: 815, y: 662 }
       ]
     },
     {
@@ -192,9 +192,9 @@ var SCENE_V1 = {
       to: "inverter",
       flowType: "grid",
       path: [
-        { x: 1200, y: 720 },
-        { x: 980, y: 720 },
-        { x: 980, y: 580 }
+        { x: 1300, y: 787 },
+        { x: 882, y: 787 },
+        { x: 882, y: 662 }
       ]
     },
     {
@@ -203,8 +203,9 @@ var SCENE_V1 = {
       to: "home",
       flowType: "home",
       path: [
-        { x: 840, y: 600 },
-        { x: 840, y: 880 }
+        { x: 1240, y: 436 },
+        { x: 1240, y: 540 },
+        { x: 936, y: 540 }
       ]
     }
   ]
