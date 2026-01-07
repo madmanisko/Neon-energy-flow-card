@@ -95,37 +95,52 @@ var SCENE_V1 = {
     {
       id: "pv",
       asset: "nodes/pv.png",
-      xPx: 840,
-      yPx: 170,
-      widthPx: 573
+      xPx: 387,
+      //840,
+      yPx: 294,
+      //170,
+      widthPx: 477,
+      //573
+      flipY: true
     },
     {
       id: "inverter",
       asset: "nodes/inverter.png",
-      xPx: 840,
-      yPx: 540,
-      widthPx: 135
+      xPx: 854,
+      //840,
+      yPx: 580,
+      //540,
+      widthPx: 187
     },
     {
       id: "battery",
       asset: "nodes/battery.png",
-      xPx: 460,
-      yPx: 700,
-      widthPx: 150
+      xPx: 393,
+      //460,
+      yPx: 791,
+      //700,
+      widthPx: 208
+      //150
     },
     {
       id: "grid",
       asset: "nodes/meter.png",
-      xPx: 1220,
-      yPx: 700,
-      widthPx: 106
+      xPx: 1374,
+      //1220,
+      yPx: 801,
+      //700,
+      widthPx: 142
+      //106
     },
     {
       id: "home",
       asset: "nodes/home.png",
-      xPx: 840,
-      yPx: 910,
-      widthPx: 600
+      xPx: 1323,
+      //840,
+      yPx: 330,
+      //910,
+      widthPx: 662
+      //287
     }
   ],
   links: [
